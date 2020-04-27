@@ -10,7 +10,8 @@ function init() {
   }
   window.Bridge = {
     closeApp: closeApp,
-    toggleMaximize: toggleMaximize
+    toggleMaximize: toggleMaximize,
+    minimize: minimize
   };
 
 }
@@ -26,4 +27,9 @@ function toggleMaximize () {
     } else {
         win.maximize()
     }
+}
+
+function minimize () {
+  let win = remote.getCurrentWindow()
+  win.minimize()
 }
