@@ -44,6 +44,7 @@ export default {
 @import "../bower_components/material-design-icons-iconfont/dist/material-design-icons.css";
 
 html,body {
+  font-family: 'Roboto';
   margin: 0;
   padding: 0;
   background-color: #00171F;
@@ -52,7 +53,6 @@ html,body {
 }
 
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -78,7 +78,6 @@ html,body {
 
 #nav #app-name {
   color: #00A8E8;
-  font-family: 'Roboto';
   padding: 5px;
 }
 
