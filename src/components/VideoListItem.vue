@@ -38,6 +38,7 @@ export default {
   display: flex;
   flex-direction: row;
   padding: 3px;
+  margin-bottom: 5px;
 }
 
 #video-thumbnail {
