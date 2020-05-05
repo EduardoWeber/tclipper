@@ -65,6 +65,7 @@ html,body {
 #app-body {
   flex: 1;
   background-color: #003459;
+  overflow: hidden;
   margin: 0px 10px 10px 10px;
   padding: 5px;
   border-radius: 5px;
