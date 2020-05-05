@@ -13,8 +13,9 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .input {
+  flex: 1;
   display: flex;
-  padding-bottom: 5px;
+  margin: 5px;
 }
 .input-field {
   flex: 1;
@@ -24,6 +25,7 @@ export default {
   height: 30px;
   background-color: #00A8E8;
   color: white;
+  padding: 5px 10px;
 }
 
 .input-field::placeholder {
