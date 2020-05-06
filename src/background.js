@@ -1,11 +1,13 @@
 'use strict'
 
 const path = require('path')
-import { app, protocol, BrowserWindow } from 'electron'
+import { app, protocol, BrowserWindow, ipcMain } from 'electron'
 import {
   createProtocol,
   /* installVueDevtools */
 } from 'vue-cli-plugin-electron-builder/lib'
+const { download } = require('electron-dl');
+
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -34,6 +36,19 @@ function createWindow () {
     // Load the index.html when not in development
     win.loadURL('app://./index.html')
   }
+
+  ipcMain.on('logging', (event, payload) => {
+    console.log('Logger:', payload);
+  });
+
+  ipcMain.on('download', (event, payload) => {
+    payload.properties.onProgress = status => win.webContents.send("download_progress", status);
+    download(BrowserWindow.getFocusedWindow(), payload.url, payload.properties).then((dl) => {
+      // dl.getSavePath()
+      console.log("Downloaded")
+    })
+  })
+
   win.on('closed', () => {
     win = null
   })
