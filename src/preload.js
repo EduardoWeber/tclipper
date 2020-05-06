@@ -1,20 +1,36 @@
 // in preload scripts, we have access to node.js and electron APIs
 // the remote web app will not have access, so this is safe
-const { ipcRenderer: ipc, remote } = require('electron');
+const { ipcRenderer, remote } = require('electron')
 
-init();
+process.once('loaded', () => {
+  window.addEventListener('message', event => {
+    // do something with custom event
+    const message = event.data;
 
-function init() {
-  if (typeof window === 'undefined') {
-    return
-  }
-  window.Bridge = {
-    closeApp: closeApp,
-    toggleMaximize: toggleMaximize,
-    minimize: minimize
-  };
+    ipcRenderer.send('logging', message);
 
-}
+    if (message.type) {
+
+      if (message.type === "download") {
+        ipcRenderer.send('logging', "Iniciando download" + message.properties.directory);
+        ipcRenderer.send('download', message)
+      }
+
+      if (message.type === "close_app") {
+        closeApp()
+      }
+
+      if (message.type === "toggle_maximize") {
+        toggleMaximize()
+      }
+
+      if (message.type === "minimize") {
+        minimize()
+      }
+      
+    }
+  });
+});
 
 function closeApp () {
     remote.app.quit()
