@@ -28,13 +28,19 @@
 export default {
   methods: {
     closeApp () {
-      window.Bridge.closeApp()
+      window.postMessage({
+        type: 'close_app'
+      });
     },
     toggleMaximize () {
-      window.Bridge.toggleMaximize()
+      window.postMessage({
+        type: 'toggle_maximize'
+      });
     },
     minimize () {
-      window.Bridge.minimize()
+      window.postMessage({
+        type: 'minimize'
+      });
     }
   }
 }
