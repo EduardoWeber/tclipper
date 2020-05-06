@@ -1,24 +1,27 @@
 <template>
   <div id="video-list-item">
-    <div id="video-thumbnail">
-      Video
-      <div id="duration">
-        3:19
+    <div class="content">
+      <div id="video-thumbnail">
+        Video
+        <div id="duration">
+          3:19
+        </div>
+      </div>
+      <div id="description">
+        Title <br>
+        Titulo Live <br>
+        Streamer <br>
+        Categoria <br>
+        Clipado por <br>
+      </div>
+      <div id="actions">
+        <div id="buttons">
+          <i class="material-icons action-button">get_app</i>
+          <i class="material-icons action-button">cancel</i>
+        </div>
       </div>
     </div>
-    <div id="description">
-      Title <br>
-      Titulo Live <br>
-      Streamer <br>
-      Categoria <br>
-      Clipado por <br>
-    </div>
-    <div id="actions">
-      <div id="buttons">
-        <i class="material-icons action-button">get_app</i>
-        <i class="material-icons action-button">cancel</i>
-      </div>
-    </div>
+    <div class="download-progress"></div>
   </div>
 </template>
 
@@ -36,9 +39,27 @@ export default {
   border-radius: 3px;
   color: white;
   display: flex;
-  flex-direction: row;
   padding: 3px;
   margin-bottom: 5px;
+  position: relative;
+}
+
+.download-progress {
+  position: absolute;
+  background-color: red;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  right: 100%;
+  border-radius: 3px;
+  z-index: 1;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  z-index: 2;
 }
 
 #video-thumbnail {
