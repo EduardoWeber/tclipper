@@ -5,6 +5,9 @@
         TClipper
       </div>
       <div id="app-actions">
+        <div class="button hover-default" @click="goToSettings">
+          <i class="material-icons">settings</i>
+        </div>
         <div class="button hover-default" @click="minimize">
           <i class="material-icons">minimize</i>
         </div>
@@ -41,6 +44,9 @@ export default {
       window.postMessage({
         type: 'minimize'
       });
+    },
+    goToSettings () {
+      this.$router.push('/settings')
     }
   }
 }
