@@ -3,7 +3,7 @@ import { actions } from './actions.js'
 import { getters } from './getters.js'
 import { mutations } from './mutations.js'
 
-export const User = {
+export const Settings = {
   namespaced: true,
   state,
   actions,
