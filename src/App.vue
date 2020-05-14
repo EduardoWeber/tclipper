@@ -25,7 +25,14 @@
 </template>
 
 <script>
+import { getToken } from './services/twitchServices'
+
 export default {
+  mounted () {
+    getToken('c80297m4sj0d8zk5k85cnoc2ip1aam', 'v67zslt958p0l0amb71gei91amjii8').then((result) => {
+      console.log(result)
+    })
+  },
   methods: {
     closeApp () {
       window.postMessage({
