@@ -7,12 +7,9 @@
       <Button buttonText="Baixar todos"/>
     </div>
     <div class="list">
-      <VideoListItem/>
-      <VideoListItemLoading/>
-      <VideoListItem/>
-      <VideoListItem/>
-      <VideoListItem/>
-      <VideoListItem/>
+      <div v-for="(clip, index) in getClipList" :key="index">
+        <VideoListItem/>
+      </div>
     </div>
   </div>
 </template>
@@ -23,6 +20,7 @@ import Input from '@/components/Input.vue'
 import VideoListItem from '@/components/VideoListItem.vue'
 import VideoListItemLoading from '@/components/VideoListItemLoading.vue'
 import Button from '@/components/Button.vue'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'Home',
@@ -31,6 +29,11 @@ export default {
     VideoListItem,
     VideoListItemLoading,
     Button
+  },
+  computed: {
+    ...mapGetters('clips', [
+      'getClipList'
+    ])
   }
 }
 </script>
