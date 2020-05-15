@@ -26,14 +26,21 @@
 
 <script>
 import { getToken } from './services/twitchServices'
+import { mapActions } from 'vuex'
 
 export default {
   mounted () {
-    getToken('c80297m4sj0d8zk5k85cnoc2ip1aam', 'v67zslt958p0l0amb71gei91amjii8').then((result) => {
-      console.log(result)
+    this.loadUserToken().then(() => {
+      // this.addClip('https://www.twitch.tv/twitch/clip/RudeMiniatureHabaneroGrammarKing?filter=clips&range=7d&sort=time')
     })
   },
   methods: {
+    ...mapActions('settings', [
+      'loadUserToken'
+    ]),
+    ...mapActions('clips', [
+      'addClip'
+    ]),
     closeApp () {
       window.postMessage({
         type: 'close_app'
