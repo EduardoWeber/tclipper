@@ -46,6 +46,9 @@ export default {
       });
     },
     goToSettings () {
+      if (this.$route.name === 'Settings'){
+        alert('true')
+      }
       this.$router.push('/settings')
     }
   }

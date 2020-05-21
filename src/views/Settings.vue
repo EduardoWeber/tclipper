@@ -1,11 +1,13 @@
 <template>
   <div class="settings">
     <div class="header">
-      <CustomInput placeholder="Token"/>
-      <CustomInput placeholder="Pasta destino"/>
+      <div class="inputs">
+        <CustomInput placeholder="Token"/>
+        <CustomInput placeholder="Pasta destino"/>
+      </div>
       <div class="buttons-container">
-        <button>Cancelar</button>
-        <button>Salvar</button>
+        <button v-on:click="goToHome" class="button cancel">Cancelar</button>
+        <button class="button save">Salvar</button>
       </div>
     </div>
   </div>
@@ -25,6 +27,11 @@ export default {
     VideoListItem,
     VideoListItemLoading,
     Button
+  },
+  methods: {
+    goToHome: function () {
+      this.$router.push('/')
+    }
   }
 }
 </script>
@@ -44,12 +51,57 @@ export default {
 }
 
 .header {
-  justify-content: space-between;
   display: flex;
+  flex: 1;
+  justify-content: space-between;
   flex-direction: column;
 }
 
 .buttons-container {
+  display: flex;
   flex-direction: row;
+  justify-content: space-between;
+  margin: 5px
+}
+
+.cancel:hover {
+  transition: background 0.3s;
+  background-color: rgba(240, 52, 52, 1);
+  border-color: transparent;
+  border-radius: 3px;
+  color: white;
+}
+
+.cancel:active {
+  outline: none;
+  background-color: #2c3e50;
+}
+
+.cancel:focus {
+  outline: none;
+}
+
+.save:hover {
+  transition: background 0.3s;
+  background-color: green;
+  border-color: transparent;
+  border-radius: 3px;
+  color: white;
+}
+
+.save:active {
+  outline: none;
+  background-color: #2c3e50;
+}
+
+.save:focus {
+  outline: none;
+}
+
+
+.button {
+  flex: 0.4;
+  height: 35px;
+  font-size: 18px;
 }
 </style>

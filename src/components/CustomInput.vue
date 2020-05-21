@@ -38,12 +38,13 @@ export default {
   text-align: center;
   font-family: 'Roboto';
   color: white;
+  font-size: 18px;
 }
 
 .input-field:focus {
   outline-width: 1;
   border: 0;
-  outline-color: violet;
+  outline-color: #2c3e50;
   outline-style:auto;
 }
 </style>
