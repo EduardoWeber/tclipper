@@ -1,5 +1,5 @@
 <template>
-  <div id="button">
+  <div id="button" v-on=" typeof callbackFunction === 'function' ? { click: callbackFunction} : {}">
     <div id="button-text">
       {{buttonText}}
     </div>
@@ -19,6 +19,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 #button {
+  cursor: pointer;
   display: flex;
   border-width: 0;
   border-radius: 3px;
