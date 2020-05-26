@@ -1,14 +1,20 @@
 <template>
   <div class="home">
     <div class="header">
-      <Button buttonText="Colar link"/>
+      <Button buttonText="Colar link" :callbackFunction="pasteUrl"/>
       <Input/>
-      <Button buttonText="Cancelar todos"/>
+      <Button buttonText="Cancelar todos" :callbackFunction="cancelAll"/>
       <Button buttonText="Baixar todos"/>
     </div>
     <div class="list">
-      <div v-for="(clip, index) in getClipList" :key="index">
-        <VideoListItem/>
+      <div v-for="clip in getClips" :key="clip.index">
+        <VideoListItem
+          :clipTitle="clip.title"
+          :streamer="clip.broadcasterName"
+          :clippedBy="clip.creatorName"
+          :thumbnailUrl="clip.thumbnailUrl"
+          :cancelAction="() => removeClip(clip.index)"
+        />
       </div>
     </div>
   </div>
@@ -20,7 +26,7 @@ import Input from '@/components/Input.vue'
 import VideoListItem from '@/components/VideoListItem.vue'
 import VideoListItemLoading from '@/components/VideoListItemLoading.vue'
 import Button from '@/components/Button.vue'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'Home',
@@ -33,7 +39,29 @@ export default {
   computed: {
     ...mapGetters('clips', [
       'getClipList'
-    ])
+    ]),
+    getClips: function () {
+      return this.getClipList.map((clip, index) => {
+        clip.index = index
+        return clip
+      })
+    }
+  },
+  methods: {
+    ...mapActions('clips', [
+      'addClip',
+      'removeClip'
+    ]),
+    pasteUrl () {
+      navigator.clipboard.readText().then((text) => {
+        this.addClip(text)
+      })
+    },
+    cancelAll () {
+      for (let index = this.getClipList.length; index >= 0; index--) {
+        this.removeClip(index)
+      }
+    }
   }
 }
 </script>
