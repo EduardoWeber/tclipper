@@ -1,15 +1,17 @@
 export const ClipStatus = {
   NOT_LOADED: 0,
   LOADED: 1,
-  STARTED: 2,
-  FINISHED: 3,
-  CANCELLED: 4,
-  ERROR: 5
+  NOT_STARTED: 2,
+  STARTED: 3,
+  FINISHED: 4,
+  CANCELLED: 5,
+  ERROR: 6
 }
 
 export class Clip {
   constructor({data = null, id = null}) {
     if (data !== null) {
+      this.uniqueId = data.uniqueId
       this.id = data.id
       this.url = data.url
       this.embedUrl = data.embed_url
