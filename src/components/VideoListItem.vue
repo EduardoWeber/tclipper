@@ -2,22 +2,24 @@
   <div id="video-list-item">
     <div class="content">
       <div id="video-thumbnail">
-        Video
+        <img :src="thumbnailUrl" style="width: 100%; height: 100%" />
         <div id="duration">
           3:19
         </div>
       </div>
       <div id="description">
-        Title <br>
-        Titulo Live <br>
-        Streamer <br>
-        Categoria <br>
-        Clipado por <br>
+        <div> {{ clipTitle }} </div>
+        <div> Streamer: {{ streamer }} </div>
+        <div> Clipado por {{ clippedBy }} </div>
       </div>
       <div id="actions">
         <div id="buttons">
-          <i class="material-icons action-button">get_app</i>
-          <i class="material-icons action-button">cancel</i>
+          <i class="material-icons action-button"  v-on=" typeof downloadAction === 'function' ? { click: downloadAction} : {}">
+            get_app
+          </i>
+          <i class="material-icons action-button" v-on=" typeof cancelAction === 'function' ? { click: cancelAction} : {}">
+            cancel
+          </i>
         </div>
       </div>
     </div>
@@ -27,7 +29,16 @@
 
 <script>
 export default {
-  name: 'VideoListItem'
+  name: 'VideoListItem',
+  props: {
+    clipTitle: String,
+    streamer: String,
+    clippedBy: String,
+    thumbnailUrl: String,
+    downloadProgress: Number,
+    cancelAction: Function,
+    downloadAction: Function
+  }
 }
 </script>
 
@@ -83,6 +94,9 @@ export default {
   flex: 1;
   margin-left: 10px;
   text-align: left;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
 }
 
 #actions {
