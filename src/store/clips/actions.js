@@ -1,8 +1,8 @@
 import { getClip } from '../../services/twitchServices'
-import { Clip } from '../../models/Clip'
+import { Clip, ClipStatus } from '../../models/Clip'
 
 export const actions = {
-    async addClip({ rootGetters, commit }, clipUrl) {
+    async addClip({ rootGetters, commit, state }, clipUrl) {
         function getVideoIdFromUrl (url) {
             // First method
             // https://www.twitch.tv/twitch/clip/RudeMiniatureHabaneroGrammarKing?filter=clips&range=7d&sort=time
@@ -31,8 +31,20 @@ export const actions = {
         const token = rootGetters['settings/getToken']
         const clipData = await getClip(token, process.env.VUE_APP_CLIENT_ID, clipId)
         console.log(clipData['data'][0])
+        clipData['data'][0].uniqueId = state.clipList.length
         const clip = new Clip({ data: clipData['data'][0] })
         commit('ADD_TO_CLIP_LIST', clip)
+    },
+    async removeClip({ commit, getters }, clipIndex) {
+        if (getters.getClipList.length > clipIndex) {
+            const clip = getters.getClipList[clipIndex]
+            if (clip.status === ClipStatus.NOT_STARTED) {
+                commit('REMOVE_CLIP_FROM_LIST', clipIndex)
+            }
+        }
+    },
+    async updateProgressClip({ commit, getters }, {clipUniqueId, progress}) {
+        
     }
 }
   
