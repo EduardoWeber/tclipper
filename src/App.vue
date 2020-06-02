@@ -30,6 +30,12 @@ import { mapActions } from 'vuex'
 
 export default {
   mounted () {
+    // Example
+    // function logMe(data) {
+    //   console.log(data)
+    // }
+    // let newCallback = window.bridge.once('logging', logMe);
+    // You can cancel the event listener with window.bridge.removeListener(newCallback)
     this.loadUserToken().then(() => {
       // this.addClip('https://www.twitch.tv/twitch/clip/RudeMiniatureHabaneroGrammarKing?filter=clips&range=7d&sort=time')
     })
