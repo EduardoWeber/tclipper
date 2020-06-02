@@ -19,7 +19,7 @@ protocol.registerSchemesAsPrivileged([{scheme: 'app', privileges: { secure: true
 
 function createWindow () {
   // Create the browser window.
-  win = new BrowserWindow({ width: 800, height: 600, frame: false, webPreferences: {
+  win = new BrowserWindow({ width: 800, height: 600, minHeight: 600, minWidth: 800, frame: false, webPreferences: {
     // Use pluginOptions.nodeIntegration, leave this alone
     // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/configuration.html#node-integration for more info
     nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
@@ -40,6 +40,10 @@ function createWindow () {
   ipcMain.on('logging', (event, payload) => {
     console.log('Logger:', payload);
   });
+
+  ipcMain.on('send_to', (event, payload) => {
+    event.sender.send(payload.channel, payload.payloadMessage)
+  })
 
   ipcMain.on('download', (event, payload) => {
     payload.properties.onProgress = status => win.webContents.send("download_progress", status);
