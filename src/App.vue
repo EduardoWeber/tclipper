@@ -48,17 +48,17 @@ export default {
       'addClip'
     ]),
     closeApp () {
-      window.postMessage({
+      window.api.send("window_manager", {
         type: 'close_app'
       });
     },
     toggleMaximize () {
-      window.postMessage({
+      window.api.send("window_manager", {
         type: 'toggle_maximize'
       });
     },
     minimize () {
-      window.postMessage({
+      window.api.send("window_manager", {
         type: 'minimize'
       });
     }
