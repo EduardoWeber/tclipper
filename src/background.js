@@ -6,6 +6,7 @@ import {
   createProtocol,
   /* installVueDevtools */
 } from 'vue-cli-plugin-electron-builder/lib'
+import WindowManager from './managers/WindowManager';
 const { download } = require('electron-dl');
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
@@ -23,7 +24,8 @@ function createWindow () {
     // Use pluginOptions.nodeIntegration, leave this alone
     // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/configuration.html#node-integration for more info
     nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
-    enableRemoteModule: true,
+    enableRemoteModule: false,
+    contextIsolation: true, 
     preload: process.env.NODE_ENV === "development" ? path.join(__dirname + '/../src/preload.js') : path.join(__dirname + '/../src/preload.js')
   } })
 
@@ -41,10 +43,6 @@ function createWindow () {
     console.log('Logger:', payload);
   });
 
-  ipcMain.on('send_to', (event, payload) => {
-    event.sender.send(payload.channel, payload.payloadMessage)
-  })
-
   ipcMain.on('download', (event, payload) => {
     payload.properties.onProgress = status => win.webContents.send("download_progress", status);
     download(BrowserWindow.getFocusedWindow(), payload.url, payload.properties).then((dl) => {
@@ -52,6 +50,8 @@ function createWindow () {
       console.log("Downloaded")
     })
   })
+
+  let windowManager = new WindowManager(ipcMain, win, app);
 
   win.on('closed', () => {
     win = null
@@ -110,3 +110,9 @@ if (isDevelopment) {
     })
   }
 }
+
+
+ipcMain.on("toMain", (event, payload) => {
+  console.log(payload)
+  win.webContents.send("fromMain", 'Teste');
+});
