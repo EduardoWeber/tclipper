@@ -6,7 +6,7 @@ contextBridge.exposeInMainWorld(
   "api", {
     send: (channel, data) => {
         // whitelist channels
-        let validChannels = ["toMain", "window_manager"];
+        let validChannels = ["toMain", "window_manager", "download_manager"];
         if (validChannels.includes(channel)) {
             ipcRenderer.send(channel, data);
         }
