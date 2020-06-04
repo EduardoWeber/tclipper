@@ -1,10 +1,9 @@
+import { app, ipcMain } from 'electron'
 
 export default class WindowManager {
-  constructor(ipcMain, win, app) {
+  constructor(win) {
 
     this.win = win
-    this.ipcMain = ipcMain
-    this.app = app
     
     ipcMain.on("window_manager", (event, payload) => {
       console.log(payload)
@@ -27,7 +26,7 @@ export default class WindowManager {
   }
 
   closeApp () {
-    this.app.quit()
+    app.quit()
   }
 
   toggleMaximize () {
