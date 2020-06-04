@@ -7,7 +7,7 @@ import {
   /* installVueDevtools */
 } from 'vue-cli-plugin-electron-builder/lib'
 import WindowManager from './managers/WindowManager';
-const { download } = require('electron-dl');
+import DownloadManager from './managers/DownloadManager';
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -50,7 +50,7 @@ function createWindow () {
       console.log("Downloaded")
     })
   })
-
+  let downloadManager = new DownloadManager(ipcMain, win, app);
   let windowManager = new WindowManager(ipcMain, win, app);
 
   win.on('closed', () => {
