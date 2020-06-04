@@ -14,6 +14,7 @@
           :clippedBy="clip.creatorName"
           :thumbnailUrl="clip.thumbnailUrl"
           :cancelAction="() => removeClip(clip.index)"
+          :downloadAction="() => downloadClip(clip)"
         />
       </div>
     </div>
@@ -52,6 +53,12 @@ export default {
       'addClip',
       'removeClip'
     ]),
+    downloadClip (clip) {
+      window.api.send('download_manager', {
+        type: 'start_download',
+        clip
+      })
+    },
     pasteUrl () {
       navigator.clipboard.readText().then((text) => {
         this.addClip(text)
