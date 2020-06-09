@@ -14,7 +14,7 @@
       </div>
       <div id="actions">
         <div id="buttons">
-          <i class="material-icons action-button"  v-on=" typeof downloadAction === 'function' ? { click: downloadAction} : {}">
+          <i v-show="isClipStatus('NOT_STARTED')" class="material-icons action-button"  v-on=" typeof downloadAction === 'function' ? { click: downloadAction} : {}">
             get_app
           </i>
           <i class="material-icons action-button" v-on=" typeof cancelAction === 'function' ? { click: cancelAction} : {}">
@@ -28,6 +28,8 @@
 </template>
 
 <script>
+import { ClipStatus } from '../models/Clip'
+
 export default {
   name: 'VideoListItem',
   props: {
@@ -36,8 +38,20 @@ export default {
     clippedBy: String,
     thumbnailUrl: String,
     downloadProgress: Number,
+    status: Number,
     cancelAction: Function,
     downloadAction: Function
+  },
+  methods: {
+    isClipStatus(clipStatus) {
+      switch (clipStatus) {
+        case 'NOT_STARTED':
+          return ClipStatus.NOT_STARTED === this.status
+      
+        default:
+          return false
+      }
+    }
   }
 }
 </script>
