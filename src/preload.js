@@ -11,22 +11,18 @@ contextBridge.exposeInMainWorld(
             ipcRenderer.send(channel, data);
         }
     },
-    receive: {
-      // returns the new callback
-      on: (eventName, callback) => { 
-        const newCallback = (_, data) => callback(data);
-        ipcRenderer.on(eventName, newCallback);
-        return newCallback;
-      },
-      once: (eventName, callback) => { 
-        const newCallback = (_, data) => callback(data);
-        ipcRenderer.once(eventName, newCallback);
-        return newCallback;
-      },
+    // returns the new callback
+    on: (eventName, callback) => {
+      const newCallback = (_, data) => callback(data);
+      ipcRenderer.on(eventName, newCallback);
+      return newCallback;
     },
-    remove: {
-      listener: (eventName, callback) => ipcRenderer.removeListener(eventName, callback),
-      allListeners: (eventName) => ipcRenderer.removeAllListeners(eventName),
-    }
+    once: (eventName, callback) => { 
+      const newCallback = (_, data) => callback(data);
+      ipcRenderer.once(eventName, newCallback);
+      return newCallback;
+    },
+    removeListener: (eventName, callback) => ipcRenderer.removeListener(eventName, callback),
+    removeAllListeners: (eventName) => ipcRenderer.removeAllListeners(eventName),
   }
 );
