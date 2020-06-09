@@ -16,6 +16,7 @@
           :cancelAction="() => removeClip(clip.index)"
           :downloadAction="() => downloadClip(clip)"
           :downloadProgress="clip.progress"
+          :status="clip.status"
         />
       </div>
     </div>
