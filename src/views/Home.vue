@@ -15,6 +15,7 @@
           :thumbnailUrl="clip.thumbnailUrl"
           :cancelAction="() => removeClip(clip.index)"
           :downloadAction="() => downloadClip(clip)"
+          :downloadProgress="clip.progress"
         />
       </div>
     </div>
