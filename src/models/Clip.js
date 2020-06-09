@@ -1,11 +1,9 @@
 export const ClipStatus = {
-  NOT_LOADED: 0,
-  LOADED: 1,
-  NOT_STARTED: 2,
-  STARTED: 3,
-  FINISHED: 4,
-  CANCELLED: 5,
-  ERROR: 6
+  NOT_STARTED: 0,
+  STARTED: 1,
+  FINISHED: 2,
+  CANCELLED: 3,
+  ERROR: 4
 }
 
 export class Clip {
