@@ -27,6 +27,7 @@ export class Clip {
       this.createdAt = data.created_at
       this.thumbnailUrl = data.thumbnail_url
       this.status = ClipStatus.NOT_STARTED
+      this.progress = 0
     } else {
 
     }
