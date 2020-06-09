@@ -40,7 +40,11 @@ export default class DownloadManager {
   startDownload(twitchClipUrl, uniqueId, directory) {
     const options = {
       directory,
-      onStarted: (downloadItem) => this.insertDownloadItem(uniqueId, downloadItem)
+      onStarted: (downloadItem) => this.insertDownloadItem(uniqueId, downloadItem),
+      onProgress: ({percent}) => this.win.webContents.send('download_progress', {
+        percent,
+        uniqueId
+      })
     }
     download(BrowserWindow.getFocusedWindow(), twitchClipUrl, options).then((dl) => {
       console.log("Downloaded")
