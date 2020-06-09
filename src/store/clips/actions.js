@@ -49,6 +49,13 @@ export const actions = {
         if (clip) {
             commit('UPDATE_CLIP', clip)
         }
+    },
+    async updateStatusClip({ commit, getters }, {clipUniqueId, status}) {
+        let clip = getters.getClipByUniqueId(clipUniqueId);
+        clip.status = status
+        if (clip) {
+            commit('UPDATE_CLIP', clip)
+        }
     }
 }
   
