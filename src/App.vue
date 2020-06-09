@@ -27,18 +27,17 @@
 <script>
 import { getToken } from './services/twitchServices'
 import { mapActions } from 'vuex'
+import { ClipStatus } from './models/Clip'
 
 export default {
   data () {
-    return {
-      downloadProgressCallback: null,
-      downloadFinishedCallback: null
-    }
+    return {}
   },
   mounted () {
 
-    this.downloadProgressCallback = window.api.on('download_progress', this.processDownloadProgress)
-    this.downloadFinishedCallback = window.api.on('download_finished', this.processDownloadFinished)
+    window.api.on('download_progress', this.processDownloadProgress)
+    window.api.on('download_finished', this.processDownloadFinished)
+    window.api.on('download_started', this.processDownloadStarted)
     // Example
     // function logMe(data) {
     //   console.log(data)
@@ -64,11 +63,19 @@ export default {
     ]),
     ...mapActions('clips', [
       'addClip',
-      'updateProgressClip'
+      'updateProgressClip',
+      'updateStatusClip'
     ]),
-    processDownloadProgress(payload) {
-      const percent = payload.percent
+    processDownloadStarted(payload) {
       const uniqueId = payload.uniqueId
+      this.updateStatusClip({
+        clipUniqueId: uniqueId,
+        status: ClipStatus.STARTED
+      })
+    },
+    processDownloadProgress(payload) {
+      const uniqueId = payload.uniqueId
+      const percent = payload.percent
       this.updateProgressClip({
         clipUniqueId: uniqueId,
         progress: percent
