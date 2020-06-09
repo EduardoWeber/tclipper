@@ -14,9 +14,33 @@ export default class DownloadManager {
           const clipUrl = this.generateClipUrl(payload.clip.thumbnailUrl)
           this.startDownload(clipUrl, payload.clip.uniqueId, this.directory)
         }
+
+        if (payload.type === "cancel_download") {
+          this.cancelDownload(payload.clip.uniqueId)
+        }
         
       }
     });
+  }
+
+  getDownloadItemByUniqueId(uniqueId) {
+    for (let i = 0; i < this.downloadItemList.length; i++) {
+      const downloadItem = this.downloadItemList[i];
+      if (downloadItem.uniqueId === uniqueId) {
+        return downloadItem
+      }
+    }
+    return null
+  }
+
+  cancelDownload(uniqueId) {
+    let downloadItemDict = this.getDownloadItemByUniqueId(uniqueId)
+    if (downloadItemDict) {
+      let downloadItem = downloadItemDict.downloadItem
+      downloadItem.cancel()
+      this.removeDownloadItem(uniqueId)
+    }
+
   }
 
   insertDownloadItem(uniqueId, downloadItem) {
@@ -41,6 +65,7 @@ export default class DownloadManager {
   }
 
   startDownload(twitchClipUrl, uniqueId, directory) {
+    console.log(uniqueId, 'started')
     const options = {
       directory,
       onStarted: (downloadItem) => this.insertDownloadItem(uniqueId, downloadItem),
@@ -51,6 +76,9 @@ export default class DownloadManager {
     }
     download(BrowserWindow.getFocusedWindow(), twitchClipUrl, options).then((dl) => {
       console.log("Downloaded")
+      this.win.webContents.send('download_finished', {
+        uniqueId
+      })
       this.removeDownloadItem(uniqueId)
     })
   }
