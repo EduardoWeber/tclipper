@@ -44,7 +44,11 @@ export const actions = {
         }
     },
     async updateProgressClip({ commit, getters }, {clipUniqueId, progress}) {
-        
+        let clip = getters.getClipByUniqueId(clipUniqueId);
+        clip.progress = progress
+        if (clip) {
+            commit('UPDATE_CLIP', clip)
+        }
     }
 }
   
