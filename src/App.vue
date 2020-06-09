@@ -29,7 +29,16 @@ import { getToken } from './services/twitchServices'
 import { mapActions } from 'vuex'
 
 export default {
+  data () {
+    return {
+      downloadProgressCallback: null,
+      downloadFinishedCallback: null
+    }
+  },
   mounted () {
+
+    this.downloadProgressCallback = window.api.on('download_progress', this.processDownloadProgress)
+    this.downloadFinishedCallback = window.api.on('download_finished', this.processDownloadFinished)
     // Example
     // function logMe(data) {
     //   console.log(data)
@@ -40,13 +49,34 @@ export default {
       // this.addClip('https://www.twitch.tv/twitch/clip/RudeMiniatureHabaneroGrammarKing?filter=clips&range=7d&sort=time')
     })
   },
+  beforeDestroy () {
+    // console.log(this.downloadFinishedCallback)
+    // if (this.downloadProgressCallback) {
+    //   window.api.removeListener(this.downloadProgressCallback)
+    // }
+    // if (this.downloadFinishedCallback) {
+    //   window.api.removeListener(this.downloadFinishedCallback)
+    // }
+  },
   methods: {
     ...mapActions('settings', [
       'loadUserToken'
     ]),
     ...mapActions('clips', [
-      'addClip'
+      'addClip',
+      'updateProgressClip'
     ]),
+    processDownloadProgress(payload) {
+      const percent = payload.percent
+      const uniqueId = payload.uniqueId
+      this.updateProgressClip({
+        clipUniqueId: uniqueId,
+        progress: percent
+      })
+    },
+    processDownloadFinished(payload) {
+
+    },
     closeApp () {
       window.api.send("window_manager", {
         type: 'close_app'
