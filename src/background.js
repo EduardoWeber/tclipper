@@ -50,8 +50,8 @@ function createWindow () {
       console.log("Downloaded")
     })
   })
-  let downloadManager = new DownloadManager(ipcMain, win, app);
-  let windowManager = new WindowManager(ipcMain, win, app);
+  let downloadManager = new DownloadManager(win);
+  let windowManager = new WindowManager(win);
 
   win.on('closed', () => {
     win = null
