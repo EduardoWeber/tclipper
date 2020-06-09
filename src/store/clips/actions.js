@@ -35,12 +35,12 @@ export const actions = {
         const clip = new Clip({ data: clipData['data'][0] })
         commit('ADD_TO_CLIP_LIST', clip)
     },
-    async removeClip({ commit, getters }, clipIndex) {
+    async removeClipByIndex({ commit, getters }, clipIndex) {
         if (getters.getClipList.length > clipIndex) {
             const clip = getters.getClipList[clipIndex]
-            if (clip.status === ClipStatus.NOT_STARTED) {
-                commit('REMOVE_CLIP_FROM_LIST', clipIndex)
-            }
+            // if (clip.status === ClipStatus.NOT_STARTED) {
+            commit('REMOVE_CLIP_FROM_LIST', clipIndex)
+            // }
         }
     },
     async updateProgressClip({ commit, getters }, {clipUniqueId, progress}) {
@@ -55,6 +55,13 @@ export const actions = {
         clip.status = status
         if (clip) {
             commit('UPDATE_CLIP', clip)
+        }
+    },
+    async removeClipByUniqueId({ dispatch, getters }, clipUniqueId) {
+        const index = getters.getClipIndexByUniqueId(clipUniqueId);
+        console.log('index', index)
+        if (index >= 0) {
+            dispatch('removeClipByIndex', index)
         }
     }
 }
