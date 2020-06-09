@@ -20,6 +20,9 @@ export default class DownloadManager {
   }
 
   insertDownloadItem(uniqueId, downloadItem) {
+    this.win.webContents.send('download_started', {
+      uniqueId
+    })
     this.downloadItemList.push({
       uniqueId,
       downloadItem
