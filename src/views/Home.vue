@@ -13,7 +13,7 @@
           :streamer="clip.broadcasterName"
           :clippedBy="clip.creatorName"
           :thumbnailUrl="clip.thumbnailUrl"
-          :cancelAction="() => removeClip(clip.index)"
+          :cancelAction="() => cancelDownload(clip)"
           :downloadAction="() => downloadClip(clip)"
           :downloadProgress="clip.progress"
           :status="clip.status"
@@ -53,8 +53,15 @@ export default {
   methods: {
     ...mapActions('clips', [
       'addClip',
-      'removeClip'
+      'removeClipByUniqueId'
     ]),
+    cancelDownload (clip) {
+      window.api.send('download_manager', {
+        type: 'cancel_download',
+        clip
+      })
+      this.removeClipByUniqueId(clip.uniqueId)
+    },
     downloadClip (clip) {
       window.api.send('download_manager', {
         type: 'start_download',
