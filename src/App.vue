@@ -82,7 +82,11 @@ export default {
       })
     },
     processDownloadFinished(payload) {
-
+      const uniqueId = payload.uniqueId
+      this.updateStatusClip({
+        clipUniqueId: uniqueId,
+        status: ClipStatus.FINISHED
+      })
     },
     closeApp () {
       window.api.send("window_manager", {
