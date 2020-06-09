@@ -23,7 +23,7 @@
         </div>
       </div>
     </div>
-    <div class="download-progress"></div>
+    <div class="download-progress" :style="'right:' + ((1-downloadProgress) * 100) + '%;'"></div>
   </div>
 </template>
 
