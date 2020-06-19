@@ -63,29 +63,31 @@ export default {
     ]),
     ...mapActions('clips', [
       'addClip',
-      'updateProgressClip',
-      'updateStatusClip'
+      'updateClipField'
     ]),
     processDownloadStarted(payload) {
       const uniqueId = payload.uniqueId
-      this.updateStatusClip({
+      this.updateClipField({
         clipUniqueId: uniqueId,
-        status: ClipStatus.STARTED
+        field: 'status',
+        value: ClipStatus.STARTED
       })
     },
     processDownloadProgress(payload) {
       const uniqueId = payload.uniqueId
       const percent = payload.percent
-      this.updateProgressClip({
+      this.updateClipField({
         clipUniqueId: uniqueId,
-        progress: percent
+        field: 'progress',
+        value: percent
       })
     },
     processDownloadFinished(payload) {
       const uniqueId = payload.uniqueId
-      this.updateStatusClip({
+      this.updateClipField({
         clipUniqueId: uniqueId,
-        status: ClipStatus.FINISHED
+        field: 'status',
+        value: ClipStatus.FINISHED
       })
     },
     closeApp () {
