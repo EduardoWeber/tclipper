@@ -1,4 +1,4 @@
-const { download } = require('electron-dl');
+const { download } = require('edl');
 import { BrowserWindow, ipcMain, app } from 'electron'
 
 export default class DownloadManager {
