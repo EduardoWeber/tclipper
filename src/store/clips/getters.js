@@ -3,19 +3,10 @@ export const getters = {
     getClipList: (state) => {
         return state.clipList
     },
-    getClipByUniqueId: (state) => (uniqueId) => {
+    getClipIndexByField: (state) => (field, value) => {
         for (let i = 0; i < state.clipList.length; i++) {
             const clip = state.clipList[i];
-            if (clip.uniqueId === uniqueId) {
-                return clip
-            }
-        }
-        return false
-    },
-    getClipIndexByUniqueId: (state) => (uniqueId) => {
-        for (let i = 0; i < state.clipList.length; i++) {
-            const clip = state.clipList[i];
-            if (clip.uniqueId === uniqueId) {
+            if (clip[field] === value) {
                 return i
             }
         }

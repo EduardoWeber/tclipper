@@ -2,7 +2,7 @@ import { getClip } from '../../services/twitchServices'
 import { Clip, ClipStatus } from '../../models/Clip'
 
 export const actions = {
-    async addClip({ rootGetters, commit, state }, clipUrl) {
+    async addClip({ rootGetters, commit, state, getters }, clipUrl) {
         function getVideoIdFromUrl (url) {
             // First method
             // https://www.twitch.tv/twitch/clip/RudeMiniatureHabaneroGrammarKing?filter=clips&range=7d&sort=time
@@ -29,11 +29,15 @@ export const actions = {
 
         const clipId = getVideoIdFromUrl(clipUrl)
         const token = rootGetters['settings/getToken']
+
         const clipData = await getClip(token, process.env.VUE_APP_CLIENT_ID, clipId)
-        console.log(clipData['data'][0])
         clipData['data'][0].uniqueId = state.clipList.length
+
         const clip = new Clip({ data: clipData['data'][0] })
-        commit('ADD_TO_CLIP_LIST', clip)
+        const index = getters.getClipIndexByField('url', clip.url);
+        if (index === -1) {
+            commit('ADD_TO_CLIP_LIST', clip)
+        }
     },
     async removeClipByIndex({ commit, getters }, clipIndex) {
         if (getters.getClipList.length > clipIndex) {
@@ -44,22 +48,23 @@ export const actions = {
         }
     },
     async updateProgressClip({ commit, getters }, {clipUniqueId, progress}) {
-        let clip = getters.getClipByUniqueId(clipUniqueId);
-        clip.progress = progress
-        if (clip) {
+        const index = getters.getClipIndexByField('url', clip.url);
+        if (index === -1) {
+            const clip = getters.getClipList[index]
+            clip.progress = progress
             commit('UPDATE_CLIP', clip)
         }
     },
     async updateStatusClip({ commit, getters }, {clipUniqueId, status}) {
-        let clip = getters.getClipByUniqueId(clipUniqueId);
-        clip.status = status
-        if (clip) {
+        const index = getters.getClipIndexByField('url', clip.url);
+        if (index === -1) {
+            const clip = getters.getClipList[index]
+            clip.status = status
             commit('UPDATE_CLIP', clip)
         }
     },
     async removeClipByUniqueId({ dispatch, getters }, clipUniqueId) {
-        const index = getters.getClipIndexByUniqueId(clipUniqueId);
-        console.log('index', index)
+        const index = getters.getClipIndexByField('uniqueId', clipUniqueId);
         if (index >= 0) {
             dispatch('removeClipByIndex', index)
         }
