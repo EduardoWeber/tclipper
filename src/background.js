@@ -43,13 +43,6 @@ function createWindow () {
     console.log('Logger:', payload);
   });
 
-  ipcMain.on('download', (event, payload) => {
-    payload.properties.onProgress = status => win.webContents.send("download_progress", status);
-    download(BrowserWindow.getFocusedWindow(), payload.url, payload.properties).then((dl) => {
-      // dl.getSavePath()
-      console.log("Downloaded")
-    })
-  })
   let downloadManager = new DownloadManager(win);
   let windowManager = new WindowManager(win);
 
