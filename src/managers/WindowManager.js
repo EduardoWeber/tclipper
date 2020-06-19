@@ -30,7 +30,7 @@ export default class WindowManager {
   }
 
   toggleMaximize () {
-    if (win.isMaximized()) {
+    if (this.win.isMaximized()) {
       this.win.unmaximize()
     } else {
       this.win.maximize()
