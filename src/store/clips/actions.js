@@ -48,16 +48,16 @@ export const actions = {
         }
     },
     async updateProgressClip({ commit, getters }, {clipUniqueId, progress}) {
-        const index = getters.getClipIndexByField('url', clip.url);
-        if (index === -1) {
+        const index = getters.getClipIndexByField('uniqueId', clipUniqueId);
+        if (index >= 0) {
             const clip = getters.getClipList[index]
             clip.progress = progress
             commit('UPDATE_CLIP', clip)
         }
     },
     async updateStatusClip({ commit, getters }, {clipUniqueId, status}) {
-        const index = getters.getClipIndexByField('url', clip.url);
-        if (index === -1) {
+        const index = getters.getClipIndexByField('uniqueId', clipUniqueId);
+        if (index >= 0) {
             const clip = getters.getClipList[index]
             clip.status = status
             commit('UPDATE_CLIP', clip)
