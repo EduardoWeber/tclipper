@@ -1,10 +1,12 @@
 const { download } = require('edl');
-import { BrowserWindow, ipcMain, app } from 'electron'
+const fs = require('fs');
+import { BrowserWindow, ipcMain, app, shell } from 'electron'
 
 export default class DownloadManager {
   constructor(win) {
     this.win = win
     this.downloadItemList = []
+    this.finishedDownloadItemList = []
     this.directory = app.getPath('downloads')
     
     ipcMain.on("download_manager", (event, payload) => {
@@ -18,14 +20,22 @@ export default class DownloadManager {
         if (payload.type === "cancel_download") {
           this.cancelDownload(payload.clip.uniqueId)
         }
+
+        if (payload.type === "delete_download") {
+          this.deleteFile(payload.clip.uniqueId)
+        }
+
+        if (payload.type === "open_download") {
+          this.openFile(payload.clip.uniqueId)
+        }
         
       }
     });
   }
 
-  getDownloadItemByUniqueId(uniqueId) {
-    for (let i = 0; i < this.downloadItemList.length; i++) {
-      const downloadItem = this.downloadItemList[i];
+  getDownloadItemByUniqueId(uniqueId, array) {
+    for (let i = 0; i < array.length; i++) {
+      const downloadItem = array[i];
       if (downloadItem.uniqueId === uniqueId) {
         return downloadItem
       }
@@ -33,31 +43,54 @@ export default class DownloadManager {
     return null
   }
 
+  deleteFile(uniqueId) {
+    let downloadItemDict = this.getDownloadItemByUniqueId(uniqueId, this.finishedDownloadItemList)
+    if (downloadItemDict) {
+      const filepath = downloadItemDict.filepath
+      if (fs.existsSync(filepath)) {
+        fs.unlink(filepath, (err) => {
+          if (err) {
+            return;
+          }
+          this.removeDownloadItem(downloadItemDict.uniqueId, this.finishedDownloadItemList)
+        });
+      }
+    }
+  }
+
+  openFile(uniqueId) {
+    let downloadItemDict = this.getDownloadItemByUniqueId(uniqueId, this.finishedDownloadItemList)
+    if (downloadItemDict) {
+      const filepath = downloadItemDict.filepath
+      shell.showItemInFolder(filepath);
+    }
+  }
+
   cancelDownload(uniqueId) {
-    let downloadItemDict = this.getDownloadItemByUniqueId(uniqueId)
+    let downloadItemDict = this.getDownloadItemByUniqueId(uniqueId, this.downloadItemList)
     if (downloadItemDict) {
       let downloadItem = downloadItemDict.downloadItem
       downloadItem.cancel()
-      this.removeDownloadItem(uniqueId)
+      this.removeDownloadItem(uniqueId, this.downloadItemList)
     }
 
   }
 
-  insertDownloadItem(uniqueId, downloadItem) {
+  insertDownloadItem(uniqueId, downloadItem, array) {
     this.win.webContents.send('download_started', {
       uniqueId
     })
-    this.downloadItemList.push({
+    array.push({
       uniqueId,
       downloadItem
     })
   }
 
-  removeDownloadItem(uniqueId) {
-    for (let i = 0; i < this.downloadItemList.length; i++) {
-      const downloadItem = this.downloadItemList[i];
+  removeDownloadItem(uniqueId, array) {
+    for (let i = 0; i < array.length; i++) {
+      const downloadItem = array[i];
       if (downloadItem.uniqueId === uniqueId) {
-        this.downloadItemList.splice(i, 1);
+        array.splice(i, 1);
         return
       }
     }
@@ -68,7 +101,7 @@ export default class DownloadManager {
     console.log(uniqueId, 'started')
     const options = {
       directory,
-      onStarted: (downloadItem) => this.insertDownloadItem(uniqueId, downloadItem),
+      onStarted: (downloadItem) => this.insertDownloadItem(uniqueId, downloadItem, this.downloadItemList),
       onProgress: ({percent}) => this.win.webContents.send('download_progress', {
         percent,
         uniqueId
@@ -79,7 +112,12 @@ export default class DownloadManager {
       this.win.webContents.send('download_finished', {
         uniqueId
       })
-      this.removeDownloadItem(uniqueId)
+      const filepath = dl.getSavePath();
+      this.finishedDownloadItemList.push({
+        uniqueId,
+        filepath
+      })
+      this.removeDownloadItem(uniqueId, this.downloadItemList)
     })
   }
 
