@@ -15,6 +15,8 @@
           :thumbnailUrl="clip.thumbnailUrl"
           :cancelAction="() => cancelDownload(clip)"
           :downloadAction="() => downloadClip(clip)"
+          :deleteAction="() => deleteClip(clip)"
+          :openAction="() => openClip(clip)"
           :downloadProgress="clip.progress"
           :status="clip.status"
         />
@@ -62,6 +64,19 @@ export default {
       })
       this.removeClipByUniqueId(clip.uniqueId)
     },
+    deleteClip (clip) {
+      window.api.send('download_manager', {
+        type: 'delete_download',
+        clip
+      })
+      this.removeClipByUniqueId(clip.uniqueId)
+    },
+    openClip (clip) {
+      window.api.send('download_manager', {
+        type: 'open_download',
+        clip
+      })
+    },
     downloadClip (clip) {
       window.api.send('download_manager', {
         type: 'start_download',
@@ -74,8 +89,15 @@ export default {
       })
     },
     cancelAll () {
-      for (let index = this.getClipList.length; index >= 0; index--) {
-        this.removeClip(index)
+      for (let index = this.getClips.length - 1; index >= 0; index--) {
+        const clip = this.getClips[index];
+        console.log(clip)
+        window.api.send('download_manager', {
+          type: 'cancel_download',
+          clip
+        })
+        this.removeClipByUniqueId(clip.uniqueId)
+        // this.removeClip(index)
       }
     }
   }
