@@ -14,12 +14,22 @@
       </div>
       <div id="actions">
         <div id="buttons">
-          <i v-show="isClipStatus('NOT_STARTED')" class="material-icons action-button"  v-on=" typeof downloadAction === 'function' ? { click: downloadAction} : {}">
-            get_app
-          </i>
-          <i class="material-icons action-button" v-on=" typeof cancelAction === 'function' ? { click: cancelAction} : {}">
-            cancel
-          </i>
+          <div v-if="!isClipStatus('FINISHED')">
+            <i v-show="isClipStatus('NOT_STARTED')" class="material-icons action-button"  v-on=" typeof downloadAction === 'function' ? { click: downloadAction} : {}">
+              get_app
+            </i>
+            <i class="material-icons action-button" v-on=" typeof cancelAction === 'function' ? { click: cancelAction} : {}">
+              cancel
+            </i>
+          </div>
+          <div v-else>
+            <i class="material-icons action-button"  v-on=" typeof openAction === 'function' ? { click: openAction} : {}">
+              folder
+            </i>
+            <i class="material-icons action-button" v-on=" typeof deleteAction === 'function' ? { click: deleteAction} : {}">
+              delete
+            </i>
+          </div>
         </div>
       </div>
     </div>
@@ -40,14 +50,17 @@ export default {
     downloadProgress: Number,
     status: Number,
     cancelAction: Function,
-    downloadAction: Function
+    downloadAction: Function,
+    openAction: Function,
+    deleteAction: Function
   },
   methods: {
     isClipStatus(clipStatus) {
       switch (clipStatus) {
         case 'NOT_STARTED':
           return ClipStatus.NOT_STARTED === this.status
-      
+        case 'FINISHED':
+          return ClipStatus.FINISHED === this.status
         default:
           return false
       }
