@@ -39,6 +39,21 @@ export const actions = {
             commit('ADD_TO_CLIP_LIST', clip)
         }
     },
+    async addClipToQueue({ commit, dispatch }, clip) {
+        commit('ADD_TO_QUEUE', clip);
+        console.log(clip);
+        dispatch('updateClipField', {clipUniqueId: clip.uniqueId, field: 'status', value: ClipStatus.QUEUED});
+    },
+    async removeClipFromQueueByUniqueId({ commit, getters, dispatch }, uniqueId) {
+        const index = getters.getClipIndexByFieldInQueue('uniqueId', uniqueId);
+        if (index >= 0) {
+            commit('REMOVE_CLIP_FROM_QUEUE', index);
+            dispatch('updateClipField', {clipUniqueId: uniqueId, field: 'status', value: ClipStatus.NOT_STARTED});
+        }
+    },
+    async popClipFromQueue({ commit }) {
+        commit('REMOVE_CLIP_FROM_QUEUE', 0)
+    },
     async removeClipByIndex({ commit, getters }, clipIndex) {
         if (getters.getClipList.length > clipIndex) {
             const clip = getters.getClipList[clipIndex]
@@ -60,6 +75,9 @@ export const actions = {
         if (index >= 0) {
             dispatch('removeClipByIndex', index)
         }
+    },
+    async setCurrentDl({commit}, value) {
+        commit('SET_CURRENT_DL', value)
     }
 }
   

@@ -1,5 +1,7 @@
 
 export const state = {
-    clipList: []
+    clipList: [],
+    queue: [],
+    currentDownloading: null,
 }
   

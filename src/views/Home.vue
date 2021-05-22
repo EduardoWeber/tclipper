@@ -4,7 +4,7 @@
       <Button buttonText="Colar link" :callbackFunction="pasteUrl"/>
       <Input/>
       <Button buttonText="Cancelar todos" :callbackFunction="cancelAll"/>
-      <Button buttonText="Baixar todos"/>
+      <Button buttonText="Baixar todos" :callbackFunction="downloadAll"/>
     </div>
     <div class="list">
       <div v-for="clip in getClips" :key="clip.index">
@@ -14,7 +14,7 @@
           :clippedBy="clip.creatorName"
           :thumbnailUrl="clip.thumbnailUrl"
           :cancelAction="() => cancelDownload(clip)"
-          :downloadAction="() => downloadClip(clip)"
+          :downloadAction="() => addToQueue(clip)"
           :deleteAction="() => deleteClip(clip)"
           :openAction="() => openClip(clip)"
           :downloadProgress="clip.progress"
@@ -32,6 +32,7 @@ import VideoListItem from '@/components/VideoListItem.vue'
 import VideoListItemLoading from '@/components/VideoListItemLoading.vue'
 import Button from '@/components/Button.vue'
 import { mapGetters, mapActions } from 'vuex'
+import { ClipStatus } from '../models/Clip'
 
 export default {
   name: 'Home',
@@ -43,7 +44,9 @@ export default {
   },
   computed: {
     ...mapGetters('clips', [
-      'getClipList'
+      'getClipList',
+      'getQueueList',
+      'getCurrentDownloading'
     ]),
     getClips: function () {
       return this.getClipList.map((clip, index) => {
@@ -52,17 +55,48 @@ export default {
       })
     }
   },
+  watch: {
+    getCurrentDownloading(newValue) {
+      if (newValue === null) {
+        if (this.getQueueList.length) {
+          this.downloadClip(this.getQueueList[0]);
+          this.popClipFromQueue();
+        }
+      }
+    }
+  },
   methods: {
     ...mapActions('clips', [
       'addClip',
-      'removeClipByUniqueId'
+      'removeClipByUniqueId',
+      'removeClipFromQueueByUniqueId',
+      'addClipToQueue',
+      'popClipFromQueue',
+      'setCurrentDl',
+      'updateClipField'
     ]),
     cancelDownload (clip) {
-      window.api.send('download_manager', {
-        type: 'cancel_download',
-        clip
-      })
-      this.removeClipByUniqueId(clip.uniqueId)
+      if(clip.uniqueId === this.getCurrentDownloading) {
+        this.setCurrentDl(null)
+        window.api.send('download_manager', {
+          type: 'cancel_download',
+          clip
+        })
+        this.updateClipField({
+          clipUniqueId: clip.uniqueId,
+          field: 'status',
+          value: ClipStatus.NOT_STARTED
+        })
+        this.updateClipField({
+          clipUniqueId: clip.uniqueId,
+          field: 'progress',
+          value: 0
+        })
+      } else if(clip.status === ClipStatus.QUEUED) {
+        this.removeClipFromQueueByUniqueId(clip.uniqueId)
+      } else if(clip.status === ClipStatus.NOT_STARTED) {
+        this.removeClipByUniqueId(clip.uniqueId)
+      }
     },
     deleteClip (clip) {
       window.api.send('download_manager', {
@@ -78,10 +112,18 @@ export default {
       })
     },
     downloadClip (clip) {
+      this.setCurrentDl(clip.uniqueId);
       window.api.send('download_manager', {
         type: 'start_download',
         clip
       })
+    },
+    addToQueue (clip) {
+      if (this.getCurrentDownloading === null) {
+        this.downloadClip(clip)
+      } else {
+        this.addClipToQueue(clip)
+      }
     },
     pasteUrl () {
       navigator.clipboard.readText().then((text) => {
@@ -98,6 +140,12 @@ export default {
         })
         this.removeClipByUniqueId(clip.uniqueId)
         // this.removeClip(index)
+      }
+    },
+    downloadAll () {
+      for (let index = 0; index < this.getClips.length; index++) {
+        const clip = this.getClips[index];
+        this.addToQueue(clip)
       }
     }
   }

@@ -3,7 +3,8 @@ export const ClipStatus = {
   STARTED: 1,
   FINISHED: 2,
   CANCELLED: 3,
-  ERROR: 4
+  ERROR: 4,
+  QUEUED: 5,
 }
 
 export class Clip {

@@ -63,7 +63,8 @@ export default {
     ]),
     ...mapActions('clips', [
       'addClip',
-      'updateClipField'
+      'updateClipField',
+      'setCurrentDl'
     ]),
     processDownloadStarted(payload) {
       const uniqueId = payload.uniqueId
@@ -72,6 +73,7 @@ export default {
         field: 'status',
         value: ClipStatus.STARTED
       })
+      this.setCurrentDl(uniqueId);
     },
     processDownloadProgress(payload) {
       const uniqueId = payload.uniqueId
@@ -89,6 +91,7 @@ export default {
         field: 'status',
         value: ClipStatus.FINISHED
       })
+      this.setCurrentDl(null);
     },
     closeApp () {
       window.api.send("window_manager", {

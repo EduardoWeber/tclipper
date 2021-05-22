@@ -59,6 +59,8 @@ export default {
       switch (clipStatus) {
         case 'NOT_STARTED':
           return ClipStatus.NOT_STARTED === this.status
+        case 'QUEUED':
+          return ClipStatus.QUEUED === this.status
         case 'FINISHED':
           return ClipStatus.FINISHED === this.status
         default:
