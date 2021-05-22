@@ -34,7 +34,7 @@ export default {
     return {}
   },
   mounted () {
-
+    // Mount preload events api
     window.api.on('download_progress', this.processDownloadProgress)
     window.api.on('download_finished', this.processDownloadFinished)
     window.api.on('download_started', this.processDownloadStarted)
