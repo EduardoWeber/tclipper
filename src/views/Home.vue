@@ -65,6 +65,15 @@ export default {
       }
     }
   },
+  mounted () {
+    setTimeout(() => {
+      this.addClip('https://www.twitch.tv/anyone05/clip/GoldenLuckyLettuceBrokeBack');
+      this.addClip('https://www.twitch.tv/anyone05/clip/StormyDeadLettucePeteZaroll');
+      this.addClip('https://www.twitch.tv/nadeshot/clip/SnappyKindDoveRalpherZ-GmkakbN_0GZVglQQ');
+      this.addClip('https://www.twitch.tv/jxsonplays/clip/CloudyGenerousLarkTBTacoRight-ZA9wAUhrfPjjoVUq');
+      this.addClip('https://www.twitch.tv/sinatraa/clip/VainGloriousChamoisDoggo-2TWcHmHywIh3SVJu');
+    }, 2000)
+  },
   methods: {
     ...mapActions('clips', [
       'addClip',
