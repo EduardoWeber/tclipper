@@ -1,4 +1,4 @@
-const { download } = require('edl');
+const { download } = require('electron-dl');
 const fs = require('fs');
 import { BrowserWindow, ipcMain, app, shell } from 'electron'
 
